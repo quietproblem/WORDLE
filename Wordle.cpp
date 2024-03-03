@@ -25,7 +25,7 @@ Wordle::~Wordle()
 void Wordle::init()
 {
     ifstream ifs;
-    ifs.open("Wordle/rawData.txt");
+    ifs.open("rawData.txt");
 
     if(ifs.fail())
     {

@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-
+#include <iomanip>
 #include "Wordle.h"
 
 using namespace std;
@@ -9,26 +9,110 @@ enum Color
 {
     GREEN,
     YELLOW,
-    GREY
+    RED,
+    DARK_GREY
 };
+
+struct characters
+{
+    char letter;
+    Color color = DARK_GREY;
+};
+
+characters abc[26] = {{'Q', DARK_GREY}, {'W', DARK_GREY}, {'E', DARK_GREY}, {'R', DARK_GREY}, {'T', DARK_GREY}, {'Y', DARK_GREY}, {'U', DARK_GREY}, {'I', DARK_GREY}, {'O', DARK_GREY}, {'P', DARK_GREY}, {'A', DARK_GREY}, {'S', DARK_GREY}, {'D', DARK_GREY}, {'F', DARK_GREY}, {'G', DARK_GREY}, {'H', DARK_GREY}, {'J', DARK_GREY}, {'K', DARK_GREY}, {'L', DARK_GREY}, {'Z', DARK_GREY}, {'X', DARK_GREY}, {'C', DARK_GREY}, {'V', DARK_GREY}, {'B', DARK_GREY}, {'N', DARK_GREY}, {'M', DARK_GREY}};
+
+void modifyLetter(char letter, Color color, characters abc[])
+{
+    //
+    letter = toupper(letter);
+
+    for (int i = 0; i < 26; i++)
+    {
+        if (letter == abc[i].letter && (color!=RED || abc[i].color!=YELLOW))
+        {
+            abc[i].color = color;
+            break;
+        }
+    }
+}
+
+const char *greenColorCode = "\033[1;32m";
+const char *yellowColorCode = "\033[1;33m";
+const char *greyColorCode = "\033[1;30m";
+const char *darkRedColorCode = "\033[1;31m";
+
+// Reset color to default after printing
+const char *resetColorCode = "\033[0m";
+
+void printABC()
+{
+    //q-p
+    //a-l
+    //z-m
+
+    for (int i = 0; i < 26; i++)
+    {
+
+        // if (i == 11 || i == 19)
+        // {
+        //     cout << "  ";
+        // }
+
+        if (abc[i].color == GREEN)
+        {
+            cout << greenColorCode << abc[i].letter << " " << resetColorCode;
+        }
+
+        else if (abc[i].color == YELLOW)
+        {
+            cout << yellowColorCode << abc[i].letter << " " << resetColorCode;
+        }
+
+        else if (abc[i].color == RED)
+        {
+            cout << darkRedColorCode << abc[i].letter << " " << resetColorCode;
+        }
+
+        else
+        {
+            cout << greyColorCode << abc[i].letter << " " << resetColorCode;
+        }
+        if (i == 9)
+        {
+            cout << endl
+                 << " ";
+        }
+
+        if (i == 18)
+        {
+            cout << endl
+                 << "  ";
+        }
+    }
+
+    cout << endl
+         << endl;
+}
 
 struct word
 {
     string name;
-    Color color[5] = {GREY, GREY, GREY, GREY, GREY};
+    Color color[5] = {DARK_GREY, DARK_GREY, DARK_GREY, DARK_GREY, DARK_GREY};
 };
-
 
 int main()
 {
     srand(time(0)); // seed the random number generator
-    
-    cout<<"Welcome to wordle!"<<endl;
-    Wordle instance;
 
+    cout << "Welcome to wordle!" << endl;
+
+    Wordle instance;
+    instance.init();
     bool finished = false;
     string str1 = instance.generateRandom();
-    cout<<str1<<endl;
+
+
+
     string str2;
 
     vector<word> guesses;
@@ -36,7 +120,7 @@ int main()
     for (int i = 0; i < 7; i++)
     {
 
-        cout<<str1<<endl;
+
 
         if (i == 6)
         {
@@ -123,22 +207,31 @@ int main()
             {
                 if (guesses.at(i).color[j] == GREEN)
                 {
+                    
                     cout << "\033[32m" << guesses.at(i).name[j] << "\033[0m";
+                    modifyLetter(guesses.at(i).name[j], GREEN, abc);
                 }
 
                 else if (guesses.at(i).color[j] == YELLOW)
                 {
+                    
                     cout << "\033[33m" << guesses.at(i).name[j] << "\033[0m"; // print in yellow
+                    modifyLetter(guesses.at(i).name[j], YELLOW, abc);
                 }
 
                 else
                 {
-                    cout << guesses.at(i).name[j];
+                    
+                    cout << "\033[1;31m" << guesses.at(i).name[j] << "\033[0m";
+                    modifyLetter(guesses.at(i).name[j], RED, abc);
                 }
             }
             cout << endl;
         }
+        cout << endl
+             << endl;
 
+        printABC();
         bool found = false;
         for (int i = 0; i < 5; i++)
         {
