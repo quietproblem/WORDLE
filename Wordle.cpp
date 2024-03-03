@@ -29,7 +29,7 @@ void Wordle::init()
 
     if(ifs.fail())
     {
-        cerr << "File open error" << endl;
+        cout << "File open error" << endl;
         return;
     }
 

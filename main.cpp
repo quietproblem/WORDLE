@@ -28,7 +28,7 @@ void modifyLetter(char letter, Color color, characters abc[])
 
     for (int i = 0; i < 26; i++)
     {
-        if (letter == abc[i].letter && (color!=RED || abc[i].color!=YELLOW))
+        if (letter == abc[i].letter && (color != RED || (abc[i].color != YELLOW && abc[i].color != GREEN)))
         {
             abc[i].color = color;
             break;
@@ -94,6 +94,26 @@ void printABC()
          << endl;
 }
 
+void printMenu()
+{
+    cout << "   WORDLE   " << endl;
+    cout << "1. Play" << endl;
+    cout << "2. Instructions" << endl;
+    cout << "3. Exit" << endl;
+}
+
+void printInstructions()
+{
+    cout << "Each guess must be a valid 5-letter word. "<<endl;
+    cout << greenColorCode << "This color means that the letter is in the correct spot" << resetColorCode << endl;
+
+    cout << yellowColorCode << "This color means that the letter is in the word but in the incorrect spot." << resetColorCode << endl;
+
+    cout << darkRedColorCode << "This color means that the letter is not word." << resetColorCode << endl;
+
+    cout << greyColorCode << "This color means that the letter has not been guessed yet." << resetColorCode << endl;
+}
+
 struct word
 {
     string name;
@@ -102,25 +122,53 @@ struct word
 
 int main()
 {
-    srand(time(0)); // seed the random number generator
+    string choice="2";
 
-    cout << "Welcome to wordle!" << endl;
+    while (choice!="1" || choice!="3")
+    {
+        printMenu();
+        getline(cin, choice);
+        if (choice=="1")
+        {
+            break;
+        }
+
+        else if (choice=="2")
+        {
+            printInstructions();
+        }
+
+        else if (choice=="3")
+        {
+            cout<<"Goodbye"<<endl;
+
+            return -1;
+        }
+        
+        
+        
+
+
+
+    }
+    
+
+
+
+    srand(time(0)); // seed the random number generator
 
     Wordle instance;
     instance.init();
     bool finished = false;
     string str1 = instance.generateRandom();
-
-
+    // string str1="grade";
 
     string str2;
 
     vector<word> guesses;
-
+    cout<<"GUESSES: "<<endl;
     for (int i = 0; i < 7; i++)
     {
-
-
 
         if (i == 6)
         {
@@ -198,36 +246,43 @@ int main()
 
         for (int i = 0; i < guesses.size(); i++)
         {
-            if (i == 0)
-            {
-                cout << "WORDLE" << endl;
-            }
-
+            // if (i == 0)
+            // {
+            //     cout << "Guesses: " << endl;
+            // }
+            cout<<"    ";
             for (int j = 0; j < 5; j++)
             {
+
                 if (guesses.at(i).color[j] == GREEN)
                 {
-                    
-                    cout << "\033[32m" << guesses.at(i).name[j] << "\033[0m";
+
+                    cout << "\033[32m" << guesses.at(i).name[j] <<" "<< "\033[0m";
                     modifyLetter(guesses.at(i).name[j], GREEN, abc);
                 }
 
                 else if (guesses.at(i).color[j] == YELLOW)
                 {
-                    
-                    cout << "\033[33m" << guesses.at(i).name[j] << "\033[0m"; // print in yellow
+
+                    cout << "\033[33m" << guesses.at(i).name[j] <<" "<< "\033[0m"; // print in yellow
                     modifyLetter(guesses.at(i).name[j], YELLOW, abc);
                 }
 
                 else
                 {
-                    
-                    cout << "\033[1;31m" << guesses.at(i).name[j] << "\033[0m";
+
+                    cout << "\033[1;31m" << guesses.at(i).name[j] <<" "<< "\033[0m";
                     modifyLetter(guesses.at(i).name[j], RED, abc);
                 }
             }
             cout << endl;
         }
+
+        for (int i = 0; i < 6-guesses.size(); i++)
+        {
+            cout<<"    _ _ _ _ _"<<endl;
+        }
+        
         cout << endl
              << endl;
 
@@ -246,5 +301,5 @@ int main()
             break;
         }
     }
-    cout << "CONGRATS! See you tomorrow" << endl;
+    cout << "CONGRATS!" << endl;
 }
