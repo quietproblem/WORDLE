@@ -18,14 +18,17 @@ struct word
     Color color[5] = {GREY, GREY, GREY, GREY, GREY};
 };
 
+
 int main()
 {
+    srand(time(0)); // seed the random number generator
+    
     cout<<"Welcome to wordle!"<<endl;
     Wordle instance;
 
-    instance.init();
     bool finished = false;
-    string str1 = "state";
+    string str1 = instance.generateRandom();
+    cout<<str1<<endl;
     string str2;
 
     vector<word> guesses;
@@ -33,7 +36,9 @@ int main()
     for (int i = 0; i < 7; i++)
     {
 
-        if (i == 7)
+        cout<<str1<<endl;
+
+        if (i == 6)
         {
             cout << "TOO BAD! The correct word was " << str1 << endl;
             return -1;

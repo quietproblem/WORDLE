@@ -9,6 +9,8 @@
 Wordle::Wordle()
 {
     root = nullptr;
+    init();
+    createList(root);
 }
 
 Wordle::~Wordle()
@@ -23,7 +25,7 @@ Wordle::~Wordle()
 void Wordle::init()
 {
     ifstream ifs;
-    ifs.open("rawData.txt");
+    ifs.open("Wordle/rawData.txt");
 
     if(ifs.fail())
     {
@@ -76,10 +78,33 @@ void Wordle::init()
     }
 }
 
+Node * Wordle::getRoot()
+{
+    return root;
+}
+
+void Wordle::createList(Node* node) 
+{
+    if (node == nullptr) {
+        return;
+    }
+
+    createList(node->left);
+    //cout << node->word << endl;
+    word_list.push_back(node->word);
+    createList(node->right);
+}
+
+void Wordle::printInOrder() 
+{
+    for(int i = 0; i < word_list.size(); i++)
+    {
+        cout << word_list.at(i) << endl;
+    }
+}
+
 bool Wordle::searchWord(string word)
 {
-
-
     Node *current = root;
     while(current != nullptr)
     {
@@ -97,4 +122,10 @@ bool Wordle::searchWord(string word)
         }
     }
     return false;
+}
+
+string Wordle::generateRandom()
+{
+    int random = rand() % word_list.size();
+    return word_list.at(random);
 }
